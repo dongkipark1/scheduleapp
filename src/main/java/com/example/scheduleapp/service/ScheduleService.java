@@ -1,6 +1,6 @@
 package com.example.scheduleapp.service;
 
-import com.example.scheduleapp.dto.Schedule;
+import com.example.scheduleapp.dto.ScheduleEntity;
 import com.example.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,23 +16,23 @@ public class ScheduleService {
 
 
     // 일정 등록
-    public Schedule createSchedule(Schedule schedule){
+    public ScheduleEntity createSchedule(ScheduleEntity schedule){
         return scheduleRepository.save(schedule);
     }
 
     //전체 일정 조회
-    public List<Schedule> getAllSchedules() {
+    public List<ScheduleEntity> getAllSchedules() {
         return scheduleRepository.findAll();
     }
 
     // ID로 일정 조회
-    public Optional<Schedule> getScheduleById(Long id) {
+    public Optional<ScheduleEntity> getScheduleById(Long id) {
         return scheduleRepository.findById(id);
     }
 
     // 일정 수정
-    public Schedule updateSchedule(Long id, Schedule updatedSchedule) {
-        Schedule schedule = scheduleRepository.findById(id)
+    public ScheduleEntity updateSchedule(Long id, ScheduleEntity updatedSchedule) {
+        ScheduleEntity schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
 
         schedule.setTitle(updatedSchedule.getTitle());

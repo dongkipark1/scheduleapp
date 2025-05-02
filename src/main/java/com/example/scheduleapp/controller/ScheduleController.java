@@ -1,11 +1,14 @@
 package com.example.scheduleapp.controller;
 
-import com.example.scheduleapp.dto.Schedule;
+import com.example.scheduleapp.dto.ScheduleEntity;
+import com.example.scheduleapp.dto.ScheduleRequest;
 import com.example.scheduleapp.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,28 +21,46 @@ public class ScheduleController {
     @GetMapping
     public String list(Model model){
         model.addAttribute("scheduleList", scheduleService.getAllSchedules());
-        return "schedule/list";
+        return "schedules/list";
     }
 
     // 등록 폼
     @GetMapping("/new")
     public String form(Model model){
-        model.addAttribute("schedule", new Schedule());
-        return "schedule/form";
+        ScheduleRequest schedule = new ScheduleRequest(); // ✅ DTO 객체 생성
+        model.addAttribute("schedule", schedule);
+        return "schedules/form";
     }
 
     // 수정 폼
     @GetMapping("/{id}/update")
     public String updateForm(@PathVariable Long id, Model model){
-        Schedule schedule = scheduleService.getScheduleById(id)
+        ScheduleEntity schedule = scheduleService.getScheduleById(id)
                 .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
-        model.addAttribute("schedule", schedule);
-        return "schedule/form";
+
+        ScheduleRequest form = new ScheduleRequest();
+        form.setId(schedule.getId());
+        form.setTitle(schedule.getTitle());
+        form.setDescription(schedule.getDescription());
+        form.setCompleted(schedule.isCompleted());
+        form.setDueDate(schedule.getDueDate());
+
+        model.addAttribute("schedule", form);
+        return "schedules/form";
     }
 
     // 글 저장 (등록/수정)
     @PostMapping
-    public String save(@ModelAttribute Schedule schedule){
+    public String save(@ModelAttribute ScheduleRequest form){
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .id(form.getId())
+                .title(form.getTitle())
+                .description(form.getDescription())
+                .completed(form.isCompleted())
+                .dueDate(form.getDueDate())
+                .createdAt(LocalDateTime.now())
+                .build();
+
         scheduleService.createSchedule(schedule);
         return "redirect:/schedules";
     }

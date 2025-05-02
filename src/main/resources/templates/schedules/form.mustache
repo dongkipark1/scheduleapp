@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{#schedule}}{{#id}}일정 수정{{/id}}{{^id}}새 일정 등록{{/id}}{{/schedule}}</title>
+</head>
+<body>
+
+{{#schedule}}
+    <h1>
+        {{#id}}✏️ 일정 수정{{/id}}
+        {{^id}}➕ 새 일정 등록{{/id}}
+    </h1>
+
+    <form action="/schedules" method="post">
+        {{#id}}
+            <input type="hidden" name="id" value="{{id}}">
+        {{/id}}
+
+        <label>제목</label><br>
+        <input type="text" name="title" value="{{title}}" required><br><br>
+
+        <label>설명</label><br>
+        <textarea name="description" rows="4" cols="50">{{description}}</textarea><br><br>
+
+        <label>마감일</label><br>
+        <input type="datetime-local" name="dueDate" value="{{dueDate}}"><br><br>
+
+        <label>
+            <input type="checkbox" name="completed" {{#completed}}checked{{/completed}}>
+            완료 여부
+        </label><br><br>
+
+        <button type="submit">저장</button>
+        <a href="/schedules">목록으로</a>
+    </form>
+{{/schedule}}
+
+</body>
+</html>
