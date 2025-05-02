@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>일정 목록</title>
+</head>
+<body>
+<h1>📅 일정 목록</h1>
+
+<a href="/schedules/new">➕ 새 일정 등록</a>
+
+{{#scheduleList}}
+    <hr>
+    <div>
+        <strong>제목:</strong> {{title}}<br>
+        <strong>마감일:</strong> {{dueDate}}<br>
+        <strong>완료 여부:</strong> {{#completed}}✅ 완료{{/completed}}{{^completed}}❌ 미완료{{/completed}}<br>
+
+        <a href="/schedules/{{id}}/update">✏️ 수정</a>
+        <form action="/schedules/{{id}}/delete" method="post" style="display:inline;">
+            <button type="submit">🗑 삭제</button>
+        </form>
+    </div>
+{{/scheduleList}}
+
+{{^scheduleList}}
+    <p>등록된 일정이 없습니다.</p>
+{{/scheduleList}}
+</body>
+</html>
