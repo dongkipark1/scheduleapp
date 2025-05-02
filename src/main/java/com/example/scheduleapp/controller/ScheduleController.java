@@ -3,45 +3,52 @@ package com.example.scheduleapp.controller;
 import com.example.scheduleapp.dto.Schedule;
 import com.example.scheduleapp.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/schedules")
+@Controller
 @RequiredArgsConstructor
+@RequestMapping("/schedules")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    //일정 등록
-    @PostMapping
-    public Schedule create(@RequestBody Schedule schedule){
-        return scheduleService.createSchedule(schedule);
-    }
-
-    //전체 일정 조회
+    //목록 보기
     @GetMapping
-    public List<Schedule> getAll(){
-        return scheduleService.getAllSchedules();
+    public String list(Model model){
+        model.addAttribute("scheduleList", scheduleService.getAllSchedules());
+        return "schedule/list";
     }
 
-    //특정 일정 조회
-    @GetMapping("/{id}")
-    public Schedule getById(@PathVariable Long id){
-        return scheduleService.getScheduleById(id)
+    // 등록 폼
+    @GetMapping("/new")
+    public String form(Model model){
+        model.addAttribute("schedule", new Schedule());
+        return "schedule/form";
+    }
+
+    // 수정 폼
+    @GetMapping("/{id}/update")
+    public String updateForm(@PathVariable Long id, Model model){
+        Schedule schedule = scheduleService.getScheduleById(id)
                 .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+        model.addAttribute("schedule", schedule);
+        return "schedule/form";
     }
 
-    //일정 수정
-    @PutMapping("/{id}")
-    public Schedule update(@PathVariable Long id, @RequestBody Schedule schedule){
-        return scheduleService.updateSchedule(id, schedule);
+    // 글 저장 (등록/수정)
+    @PostMapping
+    public String save(@ModelAttribute Schedule schedule){
+        scheduleService.createSchedule(schedule);
+        return "redirect:/schedules";
     }
 
-    //일정 삭제
-    @DeleteMapping
-    public void delete(@PathVariable Long id){
+    // 삭제
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id){
         scheduleService.deleteSchedule(id);
+        return "redirect:/schedules";
     }
+
 }
