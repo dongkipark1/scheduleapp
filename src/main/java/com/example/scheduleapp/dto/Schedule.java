@@ -25,6 +25,9 @@ public class Schedule {
     private String description;
 
     @Column(nullable = false)
+    private boolean completed = false;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime dueDate;
