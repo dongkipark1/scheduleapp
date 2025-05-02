@@ -27,7 +27,10 @@ public class ScheduleController {
     // 등록 폼
     @GetMapping("/new")
     public String form(Model model){
-        ScheduleRequest schedule = new ScheduleRequest(); // ✅ DTO 객체 생성
+        ScheduleRequest schedule = new ScheduleRequest();
+        schedule.setTitle("test-title"); // 💥 반드시 값 세팅
+        schedule.setDescription("desc");
+        schedule.setDueDate(LocalDateTime.now());
         model.addAttribute("schedule", schedule);
         return "schedules/form";
     }
@@ -72,4 +75,10 @@ public class ScheduleController {
         return "redirect:/schedules";
     }
 
+
+    @GetMapping("/test")
+    public String testSimpleValue(Model model) {
+        model.addAttribute("title", "테스트 제목입니다.");
+        return "schedules/test"; // ← 템플릿 파일명: test.mustache
+    }
 }
