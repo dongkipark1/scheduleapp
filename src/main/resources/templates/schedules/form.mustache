@@ -13,7 +13,7 @@
     </h1>
 
     {{#globalErrors}}
-        <div style="color: red;">{{.}}</div>
+        <div style="color: red; margin-bottom: 1rem">{{.}}</div>
     {{/globalErrors}}
 
     <form action="/schedules" method="post">
@@ -24,7 +24,7 @@
         <label>제목</label><br>
         <input type="text" name="title" value="{{title}}"><br>
         {{#fieldErrors.title}}
-            <div style="color:red">{{.}}</div>
+            <div style="color:red; font-size: 0.9em">{{.}}</div>
         {{/fieldErrors.title}}<br>
 
         <label>설명</label><br>
@@ -33,7 +33,7 @@
         <label>마감일</label><br>
         <input type="datetime-local" name="dueDate" value="{{dueDate}}" min="{{now}}" required><br>
         {{#fieldErrors.dueDate}}
-            <div style="color:red">{{.}}</div>
+            <div style="color:red; font-size: 0.9em">{{.}}</div>
         {{/fieldErrors.dueDate}}<br>
 
         <label>
