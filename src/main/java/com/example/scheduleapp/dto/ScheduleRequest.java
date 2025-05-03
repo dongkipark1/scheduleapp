@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 public class ScheduleRequest {
     private Long id;
 
-    @NotBlank(message = "제목은 필수입니다.")
+    @NotBlank(message = "{schedule.title.required}")
     private String title;
 
     private String description;
     private boolean completed;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @Future(message = "마감일은 현재시간 기준 미래여야 합니다")
+    @Future(message = "{schedule.dueDate.future}")
     private LocalDateTime dueDate;
 }

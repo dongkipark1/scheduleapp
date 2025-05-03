@@ -4,17 +4,24 @@ import com.example.scheduleapp.dto.ScheduleEntity;
 import com.example.scheduleapp.dto.ScheduleRequest;
 import com.example.scheduleapp.dto.ScheduleResponse;
 import com.example.scheduleapp.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.descriptor.LocalResolver;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -23,6 +30,8 @@ import java.util.stream.Collectors;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
 
     //목록 보기
     @GetMapping
@@ -76,13 +85,22 @@ public class ScheduleController {
 
     // 등록 폼
     @GetMapping("/new")
-    public String form(Model model){
+    public String form(HttpServletRequest request, Model model){
         ScheduleRequest schedule = new ScheduleRequest();
         schedule.setTitle("");
         schedule.setDescription("");
         schedule.setDueDate(LocalDateTime.now());
-        model.addAttribute("now", LocalDateTime.now().toString());
-        model.addAttribute("schedule", schedule);
+
+        Locale locale = localeResolver.resolveLocale(request);
+
+        model.addAttribute("msg", Map.of(
+                "title", messageSource.getMessage("schedule.form.label.title", null, locale),
+                "description", messageSource.getMessage("schedule.form.label.description", null, locale),
+                "dueDate", messageSource.getMessage("schedule.form.label.dueDate", null, locale),
+                "completed", messageSource.getMessage("schedule.form.label.completed", null, locale),
+                "save", messageSource.getMessage("schedule.form.button.save", null, locale),
+                "back", messageSource.getMessage("schedule.form.button.back", null, locale)
+        ));
         return "schedules/form";
     }
 
@@ -119,13 +137,16 @@ public class ScheduleController {
             var fieldErrors = result.getFieldErrors().stream()
                     .collect(Collectors.groupingBy(
                             fe -> fe.getField(),
-                            Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())
+                            Collectors.mapping(
+                                    fe -> messageSource.getMessage(fe, LocaleContextHolder.getLocale()),
+                                    Collectors.toList()
+                            )
                     ));
             model.addAttribute("fieldErrors", fieldErrors);
 
             // 전역 오류도 따로 전달
             var globalErrors = result.getGlobalErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .map(err -> messageSource.getMessage(err, LocaleContextHolder.getLocale()))
                     .toList();
             model.addAttribute("globalErrors", globalErrors);
 

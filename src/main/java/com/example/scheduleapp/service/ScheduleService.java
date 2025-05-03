@@ -43,6 +43,10 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
+    public List<ScheduleEntity> searchByTitle(String keyword) {
+        return scheduleRepository.findByTitleContainingIgnoreCase(keyword);
+    }
+
     // 일정 삭제
     public void deleteSchedule(Long id) {
         scheduleRepository.deleteById(id);
