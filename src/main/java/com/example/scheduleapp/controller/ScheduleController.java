@@ -2,6 +2,7 @@ package com.example.scheduleapp.controller;
 
 import com.example.scheduleapp.dto.ScheduleEntity;
 import com.example.scheduleapp.dto.ScheduleRequest;
+import com.example.scheduleapp.dto.ScheduleResponse;
 import com.example.scheduleapp.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,17 +23,33 @@ public class ScheduleController {
 
     //목록 보기
     @GetMapping
-    public String list(Model model){
-        model.addAttribute("scheduleList", scheduleService.getAllSchedules());
+    public String list(Model model) {
+        List<ScheduleResponse> responses = scheduleService.getAllSchedules().stream()
+                .map(entity -> {
+                    ScheduleResponse dto = new ScheduleResponse();
+                    dto.setId(entity.getId());
+                    dto.setTitle(entity.getTitle());
+                    dto.setDescription(entity.getDescription());
+                    dto.setCompleted(entity.isCompleted());
+                    dto.setDueDate(
+                            entity.getDueDate() != null ?
+                                    entity.getDueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) :
+                                    "없음"
+                    );
+                    return dto;
+                }).collect(Collectors.toList());
+
+        model.addAttribute("scheduleList", responses);
         return "schedules/list";
     }
+
 
     // 등록 폼
     @GetMapping("/new")
     public String form(Model model){
         ScheduleRequest schedule = new ScheduleRequest();
-        schedule.setTitle("test-title"); // 💥 반드시 값 세팅
-        schedule.setDescription("desc");
+        schedule.setTitle("");
+        schedule.setDescription("");
         schedule.setDueDate(LocalDateTime.now());
         model.addAttribute("schedule", schedule);
         return "schedules/form";
@@ -76,9 +96,9 @@ public class ScheduleController {
     }
 
 
-    @GetMapping("/test")
-    public String testSimpleValue(Model model) {
-        model.addAttribute("title", "테스트 제목입니다.");
-        return "schedules/test"; // ← 템플릿 파일명: test.mustache
-    }
+//    @GetMapping("/test")
+//    public String testSimpleValue(Model model) {
+//        model.addAttribute("title", "테스트 제목입니다.");
+//        return "schedules/test"; // ← 템플릿 파일명: test.mustache
+//    }
 }
