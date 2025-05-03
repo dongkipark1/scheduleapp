@@ -4,9 +4,11 @@ import com.example.scheduleapp.dto.ScheduleEntity;
 import com.example.scheduleapp.dto.ScheduleRequest;
 import com.example.scheduleapp.dto.ScheduleResponse;
 import com.example.scheduleapp.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,7 +35,7 @@ public class ScheduleController {
                     dto.setCompleted(entity.isCompleted());
                     dto.setDueDate(
                             entity.getDueDate() != null ?
-                                    entity.getDueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) :
+                                    entity.getDueDate().format(DateTimeFormatter.ofPattern("yyyy년 M월 d일 a h시 mm분")) :
                                     "없음"
                     );
                     return dto;
@@ -51,6 +53,7 @@ public class ScheduleController {
         schedule.setTitle("");
         schedule.setDescription("");
         schedule.setDueDate(LocalDateTime.now());
+        model.addAttribute("now", LocalDateTime.now().toString());
         model.addAttribute("schedule", schedule);
         return "schedules/form";
     }
@@ -74,7 +77,13 @@ public class ScheduleController {
 
     // 글 저장 (등록/수정)
     @PostMapping
-    public String save(@ModelAttribute ScheduleRequest form){
+    public String save(@ModelAttribute @Valid ScheduleRequest form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("schedule", form);
+            model.addAttribute("now", LocalDateTime.now().toString());
+            return "schedules/form";
+        }
+
         ScheduleEntity schedule = ScheduleEntity.builder()
                 .id(form.getId())
                 .title(form.getTitle())
@@ -88,17 +97,11 @@ public class ScheduleController {
         return "redirect:/schedules";
     }
 
+
     // 삭제
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id){
         scheduleService.deleteSchedule(id);
         return "redirect:/schedules";
     }
-
-
-//    @GetMapping("/test")
-//    public String testSimpleValue(Model model) {
-//        model.addAttribute("title", "테스트 제목입니다.");
-//        return "schedules/test"; // ← 템플릿 파일명: test.mustache
-//    }
 }

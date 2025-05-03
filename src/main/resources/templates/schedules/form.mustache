@@ -24,7 +24,7 @@
         <textarea name="description" rows="4" cols="50">{{description}}</textarea><br><br>
 
         <label>마감일</label><br>
-        <input type="datetime-local" name="dueDate" value="{{dueDate}}"><br><br>
+        <input type="datetime-local" name="dueDate" value="{{dueDate}}" min="{{now}}" required>
 
         <label>
             <input type="checkbox" name="completed" {{#completed}}checked{{/completed}}>
