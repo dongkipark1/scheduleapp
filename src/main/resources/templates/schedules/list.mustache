@@ -26,6 +26,11 @@
 <hr>
 <form method="get" action="/schedules">
     <input type="text" name="keyword" placeholder="제목 검색" value="{{keyword}}">
+    <select name="status">
+        <option value="">전체</option>
+        <option value="completed" {{#status}}{{#equalsCompleted}}selected{{/equalsCompleted}}{{/status}}>완료</option>
+        <option value="incomplete" {{#status}}{{#equalsIncomplete}}selected{{/equalsIncomplete}}{{/status}}>미완료</option>
+    </select>
     <button type="submit">검색</button>
 </form>
 {{#scheduleList}}
