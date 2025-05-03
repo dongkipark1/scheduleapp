@@ -6,6 +6,7 @@ import com.example.scheduleapp.dto.ScheduleResponse;
 import com.example.scheduleapp.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,15 +73,35 @@ public class ScheduleController {
         form.setDueDate(schedule.getDueDate());
 
         model.addAttribute("schedule", form);
+        model.addAttribute("now", LocalDateTime.now().toString()); // ✅ 이거 추가해야 함!
         return "schedules/form";
     }
 
+
     // 글 저장 (등록/수정)
     @PostMapping
-    public String save(@ModelAttribute @Valid ScheduleRequest form, BindingResult result, Model model) {
+    public String save(@ModelAttribute @Valid ScheduleRequest form,
+                       BindingResult result,
+                       Model model) {
         if (result.hasErrors()) {
+            // 에러 정보를 별도로 구성
             model.addAttribute("schedule", form);
             model.addAttribute("now", LocalDateTime.now().toString());
+
+            // 필드 오류를 map 형태로 수집
+            var fieldErrors = result.getFieldErrors().stream()
+                    .collect(Collectors.groupingBy(
+                            fe -> fe.getField(),
+                            Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())
+                    ));
+            model.addAttribute("fieldErrors", fieldErrors);
+
+            // 전역 오류도 따로 전달
+            var globalErrors = result.getGlobalErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+            model.addAttribute("globalErrors", globalErrors);
+
             return "schedules/form";
         }
 
@@ -96,6 +117,8 @@ public class ScheduleController {
         scheduleService.createSchedule(schedule);
         return "redirect:/schedules";
     }
+
+
 
 
     // 삭제
