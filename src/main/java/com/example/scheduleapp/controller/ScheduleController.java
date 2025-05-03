@@ -66,6 +66,8 @@ public class ScheduleController {
 
         model.addAttribute("keyword", keyword == null ? "" : keyword);
         model.addAttribute("status", status == null ? "" : status);
+        model.addAttribute("equalsCompleted", "completed".equals(status));
+        model.addAttribute("equalsIncomplete", "incomplete".equals(status));
         model.addAttribute("scheduleList", allSchedules);
         return "schedules/list";
     }
