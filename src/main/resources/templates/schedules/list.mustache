@@ -24,7 +24,10 @@
     <a href="/schedules/new">➕ 새 일정 등록</a>
 </div>
 <hr>
-
+<form method="get" action="/schedules">
+    <input type="text" name="keyword" placeholder="제목 검색" value="{{keyword}}">
+    <button type="submit">검색</button>
+</form>
 {{#scheduleList}}
     <div class="schedule-item {{#completed}}completed{{/completed}}">
         <h3>{{title}}</h3>

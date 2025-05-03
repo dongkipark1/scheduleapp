@@ -26,8 +26,8 @@ public class ScheduleController {
 
     //목록 보기
     @GetMapping
-    public String list(Model model) {
-        List<ScheduleResponse> responses = scheduleService.getAllSchedules().stream()
+    public String list(@RequestParam(required = false) String keyword, Model model) {
+        List<ScheduleResponse> allSchedules = scheduleService.getAllSchedules().stream()
                 .map(entity -> {
                     ScheduleResponse dto = new ScheduleResponse();
                     dto.setId(entity.getId());
@@ -40,11 +40,22 @@ public class ScheduleController {
                                     "없음"
                     );
                     return dto;
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
 
-        model.addAttribute("scheduleList", responses);
+        // 필터링
+        if (keyword != null && !keyword.isBlank()) {
+            allSchedules = allSchedules.stream()
+                    .filter(s -> s.getTitle() != null && s.getTitle().contains(keyword))
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("keyword", keyword == null ? "" : keyword); // ✅ 여기!
+        model.addAttribute("scheduleList", allSchedules);
         return "schedules/list";
     }
+
+
 
 
     // 등록 폼
