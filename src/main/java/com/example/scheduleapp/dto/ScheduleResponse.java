@@ -18,4 +18,5 @@ public class ScheduleResponse {
 
 
     private String dueDate;
+    private String createdAt;
 }

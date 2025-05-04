@@ -34,19 +34,19 @@
     <button type="submit">검색</button>
 </form>
 
-{{#scheduleList}}
-    <div class="schedule-item {{#completed}}completed{{/completed}}">
-        <h3>{{title}}</h3>
-        <p>{{description}}</p>
-        <p>마감일: {{dueDate}}</p>
-        <p>완료 여부: {{#completed}}✅ 완료{{/completed}}{{^completed}}❌ 미완료{{/completed}}</p>
+{{#scheduleList}}<div class="schedule-item {{#completed}}completed{{/completed}}">
+    <h3>{{title}}</h3>
+    <p>{{description}}</p>
+    <p>마감일: {{dueDate}}</p>
+    <p>완료 여부: {{#completed}}✅ 완료{{/completed}}{{^completed}}❌ 미완료{{/completed}}</p>
+    <p>등록일: {{createdAt}}</p>
 
-        <form action="/schedules/{{id}}/delete" method="post" style="display:inline;">
-            <button type="submit">🗑 삭제</button>
-        </form>
-        <a href="/schedules/{{id}}/update">✏ 수정</a>
-    </div>
-{{/scheduleList}}
+    <form action="/schedules/{{id}}/delete" method="post" style="display:inline;">
+        <button type="submit">🗑 삭제</button>
+    </form>
+    <a href="/schedules/{{id}}/update">✏ 수정</a>
+</div>{{/scheduleList}}
+
 
 
 

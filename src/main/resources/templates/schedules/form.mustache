@@ -13,7 +13,7 @@
     </h1>
 
     {{#globalErrors}}
-        <div style="color: red; margin-bottom: 1rem">{{.}}</div>
+        <div style="color:red">{{.}}</div>
     {{/globalErrors}}
 
     <form action="/schedules" method="post">
@@ -21,28 +21,28 @@
             <input type="hidden" name="id" value="{{id}}">
         {{/id}}
 
-        <label>{{msg.title}}</label><br>
-        <input type="text" name="title" value="{{title}}"><br>
+        <label>제목</label><br>
+        <input type="text" name="title" value="{{title}}" required><br>
         {{#fieldErrors.title}}
-            <div style="color:red; font-size: 0.9em">{{.}}</div>
+            <div style="color:red">{{.}}</div>
         {{/fieldErrors.title}}<br>
 
-        <label>{{msg.description}}</label><br>
+        <label>설명</label><br>
         <textarea name="description" rows="4" cols="50">{{description}}</textarea><br><br>
 
-        <label>{{msg.dueDate}}</label><br>
-        <input type="datetime-local" name="dueDate" value="{{dueDate}}" min="{{now}}" required><br>
+        <label>마감일</label><br>
+        <input type="datetime-local" name="dueDate" value="{{dueDate}}" min="{{now}}" required>
         {{#fieldErrors.dueDate}}
-            <div style="color:red; font-size: 0.9em">{{.}}</div>
-        {{/fieldErrors.dueDate}}<br>
+            <div style="color:red">{{.}}</div>
+        {{/fieldErrors.dueDate}}<br><br>
 
         <label>
             <input type="checkbox" name="completed" {{#completed}}checked{{/completed}}>
-            {{msg.completed}}
+            완료 여부
         </label><br><br>
 
-        <button type="submit">{{msg.save}}</button>
-        <a href="/schedules">{{msg.back}}</a>
+        <button type="submit">저장</button>
+        <a href="/schedules">목록으로</a>
     </form>
 {{/schedule}}
 
