@@ -41,7 +41,7 @@
     <p>완료 여부: {{#completed}}✅ 완료{{/completed}}{{^completed}}❌ 미완료{{/completed}}</p>
     <p>등록일: {{createdAt}}</p>
 
-    <form action="/schedules/{{id}}/delete" method="post" style="display:inline;">
+    <form action="/schedules/{{id}}/delete" method="post" style="display:inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
         <button type="submit">🗑 삭제</button>
     </form>
     <a href="/schedules/{{id}}/update">✏ 수정</a>
