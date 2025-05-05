@@ -33,6 +33,8 @@ public class ScheduleServiceTest {
 
     @Test
     @DisplayName("일정 저장 테스트")
+
+    // given
     void testCreateSchedule() {
         ScheduleEntity schedule = ScheduleEntity.builder()
                 .title("제목 1")
@@ -43,12 +45,43 @@ public class ScheduleServiceTest {
 
         when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(schedule);
 
+        // when
         ScheduleEntity result = scheduleService.createSchedule(schedule);
 
+        // then
         assertThat(result.getTitle()).isEqualTo("제목 1");
         verify(scheduleRepository, times(1)).save(schedule);
     }
 
+    @Test
+    @DisplayName("일정 전체 목록 조회 테스트")
+    void testGetAllSchedules() {
 
+        //given
+        ScheduleEntity schedule1 = ScheduleEntity.builder()
+                .title("일정 1")
+                .description("내용 1")
+                .dueDate(LocalDateTime.now().plusDays(1))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        ScheduleEntity schedule2 = ScheduleEntity.builder()
+                .title("일정 2")
+                .description("내용 2")
+                .dueDate(LocalDateTime.now().plusDays(2))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        List<ScheduleEntity> mockList = Arrays.asList(schedule1, schedule2);
+        when(scheduleRepository.findAll()).thenReturn(mockList);
+
+        //when
+        List<ScheduleEntity> result = scheduleService.getAllSchedules();
+
+        //then
+        assertThat(result).hasSize(2);
+        assertThat(result).extracting("title").contains("일정 1", "일정 2");
+        verify(scheduleRepository, times(1)).findAll();
+    }
 
 }
