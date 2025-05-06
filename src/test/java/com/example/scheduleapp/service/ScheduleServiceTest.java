@@ -119,4 +119,22 @@ public class ScheduleServiceTest {
         assertThat(result.isCompleted()).isTrue();
         verify(scheduleRepository, times(1)).save(updated);
     }
+
+    @Test
+    @DisplayName("일정 삭제 테스트")
+    void testDeleteSchedule(){
+
+        //given
+        Long scheduleId = 1L;
+
+        doNothing().when(scheduleRepository).deleteById(scheduleId);
+
+        //when
+        scheduleService.deleteSchedule(scheduleId);
+
+        //then
+        verify(scheduleRepository, times(1)).deleteById(scheduleId);
+    }
+
+
 }
