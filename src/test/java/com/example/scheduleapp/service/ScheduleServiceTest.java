@@ -136,5 +136,29 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).deleteById(scheduleId);
     }
 
+    @Test
+    @DisplayName("단일 일정 조회 테스트")
+    void testGetScheduleById(){
+        //given
+        Long id = 1L;
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .id(id)
+                .title("조회 할 제목")
+                .description("조회 설명")
+                .dueDate(LocalDateTime.now().plusDays(2))
+                .createdAt(LocalDateTime.now())
+                .build();
 
+        when(scheduleRepository.findById(id)).thenReturn(Optional.of(schedule));
+
+        //when
+        Optional<ScheduleEntity> result = scheduleService.getScheduleById(id);
+
+        //then
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(id);
+        assertThat(result.get().getTitle()).isEqualTo("조회 할 제목");
+
+        verify(scheduleRepository, times(1)).findById(id);
+    }
 }
