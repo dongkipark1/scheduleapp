@@ -84,4 +84,39 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).findAll();
     }
 
+    @Test
+    @DisplayName("일정 수정 테스트")
+    void testUpdateSchedule(){
+        //given
+        Long scheduleId = 1L;
+
+        ScheduleEntity original = ScheduleEntity.builder()
+                .id(scheduleId)
+                .title("기존 제목")
+                .description("기존 설명")
+                .dueDate(LocalDateTime.now().plusDays(1))
+                .createdAt(LocalDateTime.now())
+                .completed(false)
+                .build();
+
+        ScheduleEntity updated = ScheduleEntity.builder()
+                .id(scheduleId)
+                .title("수정 후 제목")
+                .description("수정 후 설명")
+                .dueDate(LocalDateTime.now().plusDays(2))
+                .createdAt(original.getCreatedAt())
+                .completed(true)
+                .build();
+
+        when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(original));
+        when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(updated);
+
+        //when
+        ScheduleEntity result = scheduleService.createSchedule(updated);
+
+        //then
+        assertThat(result.getTitle()).isEqualTo("수정 후 제목");
+        assertThat(result.isCompleted()).isTrue();
+        verify(scheduleRepository, times(1)).save(updated);
+    }
 }
