@@ -32,7 +32,7 @@ Github: http://github.com/dongkipark1
 
 ---
 
-## 🛠 사용 기술
+## ✅ 기술 스택
 
 - Java 21
 - Spring Boot 3
@@ -46,6 +46,18 @@ Github: http://github.com/dongkipark1
 
 ---
 
+✅ 기술 스택
+<p> <img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=java&logoColor=white" /> <br> <img src="https://img.shields.io/badge/Spring Boot-3.2.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" /> <br> <img src="https://img.shields.io/badge/Mustache-Template-orange?style=for-the-badge" /> <br> <img src="https://img.shields.io/badge/H2-Database-004A99?style=for-the-badge&logo=h2&logoColor=white" /> <br> <img src="https://img.shields.io/badge/JUnit5-Test-red?style=for-the-badge&logo=junit5&logoColor=white" /> </p>
+
 ## 🚀 git 페이지
 https://github.com/dongkipark1/scheduleapp.git
 
+📌 API 명세 (간단 정리)
+
+| HTTP Method | URL Path                 | 설명            |
+| ----------- | ------------------------ | ------------- |
+| GET         | `/schedules`             | 일정 전체 목록 조회   |
+| GET         | `/schedules/new`         | 일정 등록 폼       |
+| POST        | `/schedules`             | 일정 저장 (등록/수정) |
+| GET         | `/schedules/{id}/update` | 일정 수정 폼       |
+| POST        | `/schedules/{id}/delete` | 일정 삭제         |
